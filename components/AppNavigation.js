@@ -250,10 +250,10 @@ function AppNavigation(props) {
           <DrawerListItem icon={<GroupIcon />} to="/finance/client">
             Clients
           </DrawerListItem>
-          <DrawerListItem icon={<DescriptionIcon />} to="/finance/quotes">
+          <DrawerListItem icon={<DescriptionIcon />} to="/finance/quote">
             Quotes
           </DrawerListItem>
-          <DrawerListItem icon={<ReceiptIcon />} to="/finance/invoices">
+          <DrawerListItem icon={<ReceiptIcon />} to="/finance/invoice">
             Invoices
           </DrawerListItem>
         </DrawerNestedList>
