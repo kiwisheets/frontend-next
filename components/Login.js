@@ -100,7 +100,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function onLogin() {
-  Router.push('/');
+  Router.replace('/');
 }
 
 export default function Login() {

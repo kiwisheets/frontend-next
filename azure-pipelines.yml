@@ -1,0 +1,27 @@
+trigger:
+  branches:
+    include:
+      - '*'
+
+pr:
+  branches:
+    include:
+      - '*'
+
+resources:
+  - repo: self
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  repository: 'kiwisheets/frontend'
+  isMain: $[in(variables['Build.SourceBranch'], 'refs/heads/master')]
+
+steps:
+  - task: Npm@1
+    inputs:
+      command: 'ci'
+  - bash: CI=true npm test
+    displayName: Jest Test

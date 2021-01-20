@@ -25,7 +25,6 @@ import {
 } from '@/components/Form';
 
 import CREATE_CLIENT from '@/graphql/mutations/createClient';
-import Page from '@/components/Page';
 import Router from 'next/router';
 
 const FormContext = CreateFormContext();
@@ -40,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CreateClient = () => {
+export default function CreateClient() {
   const classes = useStyles();
 
   const [name, setName] = useState('');
@@ -211,14 +210,6 @@ const CreateClient = () => {
       </Card>
     </Fade>
   );
-};
+}
 
 CreateClient.propTypes = {};
-
-export default function CreateClientPage() {
-  return (
-    <Page>
-      <CreateClient />
-    </Page>
-  );
-}

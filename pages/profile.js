@@ -18,7 +18,6 @@ import FullPanelSpinner from '@/components/FullPanelSpinner';
 
 import TwoFactorPanel from '@/components/TwoFactorPanel';
 import ChangePasswordPanel from '@/components/ChangePasswordPanel';
-import Page from '@/components/Page';
 
 import ME from '@/graphql/queries/me';
 
@@ -68,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Profile() {
+export default function Profile() {
   const classes = useStyles();
 
   const [accordianExpanded, setAccordianExpanded] = useState('personal');
@@ -259,13 +258,5 @@ function Profile() {
         </Accordion>
       </div>
     </Fade>
-  );
-}
-
-export default function ProfilePage() {
-  return (
-    <Page>
-      <Profile />
-    </Page>
   );
 }

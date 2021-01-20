@@ -1,7 +1,6 @@
 import Head from 'next/head';
 
 import { gql, useQuery } from '@apollo/client';
-import Page from '@/components/Page';
 
 export const VERSION_QUERY = gql`
   query version {
@@ -9,7 +8,7 @@ export const VERSION_QUERY = gql`
   }
 `;
 
-function Home() {
+export default function Home() {
   const { loading, error, data } = useQuery(VERSION_QUERY);
 
   return (
@@ -35,13 +34,5 @@ function Home() {
         {data && <p>Result: {data.version}</p>}
       </div>
     </div>
-  );
-}
-
-export default function HomePage() {
-  return (
-    <Page>
-      <Home />
-    </Page>
   );
 }

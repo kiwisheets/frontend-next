@@ -19,7 +19,6 @@ import CLIENTS_LIST from '@/graphql/queries/clientsList';
 
 import FullPanelSpinner from '@/components/FullPanelSpinner';
 import { EnhancedTableHead, TableToolbar } from '@/components/Table';
-import Page from '@/components/Page';
 import NextLink from '@/components/Link';
 
 const descendingComparator = (a, b, orderBy) => {
@@ -71,7 +70,7 @@ const tableHead = [
   },
 ];
 
-function ClientsDashboard() {
+export default function ClientsDashboard() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
@@ -239,13 +238,5 @@ function ClientsDashboard() {
         />
       </Paper>
     </Fade>
-  );
-}
-
-export default function ClientsPage() {
-  return (
-    <Page>
-      <ClientsDashboard />
-    </Page>
   );
 }
