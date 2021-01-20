@@ -1,0 +1,54 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "extends": [
+    "airbnb",
+    "airbnb/hooks",
+    "plugin:react/recommended",
+    "plugin:mdx/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "overrides": [
+    {
+      "files": ["*.mdx"],
+      "extends": ["plugin:mdx/overrides"],
+      "rules": {
+        "import/prefer-default-export": 0
+      }
+    }
+  ],
+  "plugins": ["react", "mdx"],
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/jsx-filename-extension": 0
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          ["@/components/*", "./components/"],
+          ["@/posts/*", "./posts/"],
+          ["@/lib/*", "./lib/"],
+          ["@/styles/*", "./styles/"],
+          ["@/utils/*", "./utils/"],
+          ["@/graphql/*", "./graphql/"]
+        ],
+        "extensions": [".js", ".jsx", ".ts", ".tsx", ".css", ".md", ".mdx"]
+      }
+    }
+  }
+}
