@@ -13,7 +13,8 @@ import {
   Switch,
   Collapse,
 } from '@material-ui/core';
-import { useMutation } from '@apollo/client';
+
+import { useCreateClientMutation } from '@/graphql/graphql';
 
 import {
   CreateFormContext,
@@ -24,7 +25,6 @@ import {
   FormSubmitButton,
 } from '@/components/Form';
 
-import CREATE_CLIENT from '@/graphql/mutations/createClient';
 import Router from 'next/router';
 
 const FormContext = CreateFormContext();
@@ -53,7 +53,7 @@ export default function CreateClient() {
 
   const [expandBillingAddress, setExpandBillingAddress] = useState(true);
 
-  const [mutate, { loading, error, data }] = useMutation(CREATE_CLIENT);
+  const [mutate, { loading, error, data }] = useCreateClientMutation();
 
   if (error) {
     console.log(error.message);
