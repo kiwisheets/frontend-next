@@ -1,13 +1,12 @@
 import React from 'react';
 
 import { Fade, Paper } from '@material-ui/core';
-import { useQuery } from '@apollo/client';
 
-import PREVIEW_INVOICE from '@/graphql/queries/previewInvoice';
 import FullPanelSpinner from '@/components/FullPanelSpinner';
+import { usePreviewInvoiceQuery } from '@/graphql/graphql';
 
 const Invoices = () => {
-  const { data, loading, error } = useQuery(PREVIEW_INVOICE, {
+  const { data, loading, error } = usePreviewInvoiceQuery({
     fetchPolicy: 'no-cache',
   });
 

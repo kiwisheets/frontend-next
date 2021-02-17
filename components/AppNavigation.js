@@ -30,7 +30,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import DescriptionIcon from '@material-ui/icons/Description';
 
-import { useApolloClient, useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 
 import {
   Drawer,
@@ -39,7 +39,8 @@ import {
   DrawerNestedList,
 } from '@/components/Drawer';
 
-import ME from '@/graphql/queries/me';
+import { useMeQuery } from '@/graphql/graphql';
+
 import Link from './Link';
 
 const calculateInputLeftPadding = (theme) =>
@@ -162,7 +163,7 @@ function AppNavigation(props) {
   // queries
 
   // TODO: Handle error and loading
-  const { data } = useQuery(ME, {
+  const { data } = useMeQuery({
     errorPolicy: 'none',
     fetchPolicy: 'cache-first',
   });

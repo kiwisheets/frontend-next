@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { string, func, bool, shape } from 'prop-types';
-import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
   Card,
@@ -15,10 +14,9 @@ import {
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import MoreIcon from '@material-ui/icons/MoreVert';
-
 import { Skeleton } from '@material-ui/lab';
-import CLIENT from '@/graphql/queries/client';
-import UPDATE_CLIENT from '@/graphql/mutations/updateClient';
+
+import { useClientQuery, useUpdateClientMutation } from '@/graphql/graphql';
 import { Row, Col } from './Grid';
 import { CreateFormContext, FormTextField } from './Form';
 
@@ -153,7 +151,7 @@ const Client = (props) => {
   const [modifying, setModifying] = useState(false);
   const [client, setClient] = useState({});
 
-  const { data, loading, error, refetch } = useQuery(CLIENT, {
+  const { data, loading, error, refetch } = useClientQuery({
     variables: {
       id,
     },
@@ -162,8 +160,8 @@ const Client = (props) => {
 
   const [
     updateClientMutation,
-    { loading: updateLoading, data: updateData, error: updateError },
-  ] = useMutation(UPDATE_CLIENT);
+    { loading: updateLoading, data: updateData },
+  ] = useUpdateClientMutation();
 
   useEffect(() => {
     if (updateData != null) {

@@ -12,14 +12,11 @@ import {
   TableRow,
   Tooltip,
 } from '@material-ui/core';
-import { useQuery } from '@apollo/client';
-
-import CLIENT_COUNT from '@/graphql/queries/clientCount';
-import CLIENTS_LIST from '@/graphql/queries/clientsList';
 
 import FullPanelSpinner from '@/components/FullPanelSpinner';
 import { EnhancedTableHead, TableToolbar } from '@/components/Table';
 import NextLink from '@/components/Link';
+import { useClientCountQuery, useClientsQuery } from '@/graphql/graphql';
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -79,9 +76,9 @@ export default function ClientsDashboard() {
 
   const highestPage = useRef(0);
 
-  const { loading: countLoading, data: count } = useQuery(CLIENT_COUNT);
+  const { loading: countLoading, data: count } = useClientCountQuery();
 
-  const { loading, data, fetchMore } = useQuery(CLIENTS_LIST, {
+  const { loading, data, fetchMore } = useClientsQuery({
     variables: {
       page: 0,
     },

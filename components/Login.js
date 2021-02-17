@@ -18,8 +18,6 @@ import SnackbarAlert from '@/components/SnackbarAlert';
 
 import { localStorageKey } from '@/lib/apolloClient';
 
-import IS_LOGGED_IN from '@/graphql/queries/isLoggedIn';
-
 const LOGIN = gql`
   mutation login($email: String!, $password: String!, $twoFactor: String) {
     login(email: $email, password: $password, twoFactor: $twoFactor) {
@@ -145,7 +143,11 @@ export default function Login() {
 
   const handleLoginExited = () => {
     client.writeQuery({
-      query: IS_LOGGED_IN,
+      query: gql`
+        query IsLoggedIn {
+          isLoggedIn @client
+        }
+      `,
       data: { isLoggedIn: true },
     });
   };

@@ -1,14 +1,13 @@
-import { useQuery } from '@apollo/client';
 import Router from 'next/router';
 import { Container, Fade } from '@material-ui/core';
 
 import AppNavigation from '@/components/AppNavigation';
 import Login from '@/components/Login';
 
-import IS_LOGGED_IN from '@/graphql/queries/isLoggedIn';
+import { useIsLoggedInQuery } from '@/graphql/graphql';
 
 export default function Page({ noAuth, children }) {
-  const { loading, data, error } = useQuery(IS_LOGGED_IN);
+  const { loading, data, error } = useIsLoggedInQuery();
 
   if (loading) {
     return <p>Loading page...</p>;

@@ -1,0 +1,6 @@
+query Clients($page: Int) {
+  clients(page: $page) {
+    id
+    name
+  }
+}

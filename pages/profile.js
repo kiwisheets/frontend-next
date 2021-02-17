@@ -10,7 +10,6 @@ import {
 } from '@material-ui/core';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { useQuery } from '@apollo/client';
 
 import { authenticator } from 'otplib';
 
@@ -18,8 +17,7 @@ import FullPanelSpinner from '@/components/FullPanelSpinner';
 
 import TwoFactorPanel from '@/components/TwoFactorPanel';
 import ChangePasswordPanel from '@/components/ChangePasswordPanel';
-
-import ME from '@/graphql/queries/me';
+import { useMeQuery } from '@/graphql/graphql';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +74,7 @@ export default function Profile() {
     data: personalData,
     loading: personalLoading,
     // error: personalError,
-  } = useQuery(ME, {
+  } = useMeQuery({
     fetchPolicy: 'cache-first',
   });
 

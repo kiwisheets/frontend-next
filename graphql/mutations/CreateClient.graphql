@@ -1,0 +1,5 @@
+mutation CreateClient($client: CreateClientInput!) {
+  createClient(client: $client) {
+    id
+  }
+}
