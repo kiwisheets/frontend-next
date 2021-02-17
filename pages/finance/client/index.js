@@ -76,12 +76,15 @@ export default function ClientsDashboard() {
 
   const highestPage = useRef(0);
 
-  const { loading: countLoading, data: count } = useClientCountQuery();
+  const { loading: countLoading, data: count } = useClientCountQuery({
+    fetchPolicy: 'cache-and-network',
+  });
 
   const { loading, data, fetchMore } = useClientsQuery({
     variables: {
       page: 0,
     },
+    fetchPolicy: 'cache-and-network',
   });
 
   const rows = data ? data.clients : [];

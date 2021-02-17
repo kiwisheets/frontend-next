@@ -155,7 +155,7 @@ const Client = (props) => {
     variables: {
       id,
     },
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   const [
