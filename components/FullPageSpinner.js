@@ -1,9 +1,10 @@
 import { CircularProgress, makeStyles } from '@material-ui/core';
 
 const useFullPageSpinnerStyles = makeStyles(() => ({
-  root: {
+  spinner: {
     fontSize: '4em',
     height: '100vh',
+    width: '100vw',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -14,7 +15,7 @@ const useFullPageSpinnerStyles = makeStyles(() => ({
 export default function FullPageSpinner() {
   const classes = useFullPageSpinnerStyles();
   return (
-    <div className={classes.root}>
+    <div key="spinner" className={classes.spinner}>
       <CircularProgress />
     </div>
   );

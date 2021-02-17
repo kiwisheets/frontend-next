@@ -5,12 +5,17 @@ import AppNavigation from '@/components/AppNavigation';
 import Login from '@/components/Login';
 
 import { useIsLoggedInQuery } from '@/graphql/graphql';
+import FullPageSpinner from './FullPageSpinner';
 
 export default function Page({ noAuth, children }) {
   const { loading, data, error } = useIsLoggedInQuery();
 
   if (loading) {
-    return <p>Loading page...</p>;
+    return (
+      <div key="spinner">
+        <FullPageSpinner />
+      </div>
+    );
   }
 
   if (!noAuth && (error || !data.isLoggedIn)) {
