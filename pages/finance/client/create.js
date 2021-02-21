@@ -14,7 +14,7 @@ import {
   Collapse,
 } from '@material-ui/core';
 
-import { useCreateClientMutation } from '@/graphql/graphql';
+import { useCreateClientMutation } from '@/lib/graphql';
 
 import {
   CreateFormContext,
@@ -211,5 +211,3 @@ export default function CreateClient() {
     </Fade>
   );
 }
-
-CreateClient.propTypes = {};

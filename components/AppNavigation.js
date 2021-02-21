@@ -39,7 +39,7 @@ import {
   DrawerNestedList,
 } from '@/components/Drawer';
 
-import { useMeQuery } from '@/graphql/graphql';
+import { useMeQuery } from '@/lib/graphql';
 
 import Link from './Link';
 

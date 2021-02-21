@@ -4,7 +4,7 @@ schema:
   - schema/IsLoggedIn.graphql
 documents: "**/*.graphql"
 generates:
-  graphql/graphql.ts:
+  lib/graphql.ts:
     plugins:
       - "typescript"
       - "typescript-operations"

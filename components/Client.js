@@ -16,7 +16,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { Skeleton } from '@material-ui/lab';
 
-import { useClientQuery, useUpdateClientMutation } from '@/graphql/graphql';
+import { useClientQuery, useUpdateClientMutation } from '@/lib/graphql';
 import { Row, Col } from './Grid';
 import { CreateFormContext, FormTextField } from './Form';
 

@@ -4,7 +4,7 @@ import { Container, Fade } from '@material-ui/core';
 import AppNavigation from '@/components/AppNavigation';
 import Login from '@/components/Login';
 
-import { useIsLoggedInQuery } from '@/graphql/graphql';
+import { useIsLoggedInQuery } from '@/lib/graphql';
 
 export default function Page({ noAuth, children }) {
   const { loading, data, error } = useIsLoggedInQuery();

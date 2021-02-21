@@ -3,7 +3,7 @@ import React from 'react';
 import { Fade, Paper } from '@material-ui/core';
 
 import FullPanelSpinner from '@/components/FullPanelSpinner';
-import { usePreviewInvoiceQuery } from '@/graphql/graphql';
+import { usePreviewInvoiceQuery } from '@/lib/graphql';
 
 const Invoices = () => {
   const { data, loading, error } = usePreviewInvoiceQuery({

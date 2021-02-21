@@ -522,7 +522,9 @@ export type MeQuery = (
   )> }
 );
 
-export type PreviewInvoiceQueryVariables = Exact<{ [key: string]: never; }>;
+export type PreviewInvoiceQueryVariables = Exact<{
+  previewInvoiceInvoice: PreviewInvoiceInput;
+}>;
 
 
 export type PreviewInvoiceQuery = (
@@ -796,10 +798,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PreviewInvoiceDocument = gql`
-    query PreviewInvoice {
-  previewInvoice(
-    invoice: {number: 1, clientID: "5xvqrzqOJ6", items: [{name: "Test Item", description: "Item description", unitCost: 5, quantity: 1}]}
-  )
+    query PreviewInvoice($previewInvoiceInvoice: PreviewInvoiceInput!) {
+  previewInvoice(invoice: $previewInvoiceInvoice)
 }
     `;
 
@@ -815,10 +815,11 @@ export const PreviewInvoiceDocument = gql`
  * @example
  * const { data, loading, error } = usePreviewInvoiceQuery({
  *   variables: {
+ *      previewInvoiceInvoice: // value for 'previewInvoiceInvoice'
  *   },
  * });
  */
-export function usePreviewInvoiceQuery(baseOptions?: Apollo.QueryHookOptions<PreviewInvoiceQuery, PreviewInvoiceQueryVariables>) {
+export function usePreviewInvoiceQuery(baseOptions: Apollo.QueryHookOptions<PreviewInvoiceQuery, PreviewInvoiceQueryVariables>) {
         return Apollo.useQuery<PreviewInvoiceQuery, PreviewInvoiceQueryVariables>(PreviewInvoiceDocument, baseOptions);
       }
 export function usePreviewInvoiceLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PreviewInvoiceQuery, PreviewInvoiceQueryVariables>) {

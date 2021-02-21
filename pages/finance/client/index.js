@@ -16,7 +16,7 @@ import {
 import FullPanelSpinner from '@/components/FullPanelSpinner';
 import { EnhancedTableHead, TableToolbar } from '@/components/Table';
 import NextLink from '@/components/Link';
-import { useClientCountQuery, useClientsQuery } from '@/graphql/graphql';
+import { useClientCountQuery, useClientsQuery } from '@/lib/graphql';
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {

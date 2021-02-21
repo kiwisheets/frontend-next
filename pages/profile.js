@@ -17,7 +17,7 @@ import FullPanelSpinner from '@/components/FullPanelSpinner';
 
 import TwoFactorPanel from '@/components/TwoFactorPanel';
 import ChangePasswordPanel from '@/components/ChangePasswordPanel';
-import { useMeQuery } from '@/graphql/graphql';
+import { useMeQuery } from '@/lib/graphql';
 
 const useStyles = makeStyles((theme) => ({
   root: {

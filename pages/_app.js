@@ -5,6 +5,8 @@ import { useApollo } from '@/lib/apolloClient';
 
 import Page from '@/components/Page';
 
+import 'antd/dist/antd.css';
+
 import 'typeface-roboto';
 
 import theme from '@/lib/theme';
