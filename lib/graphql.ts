@@ -11,7 +11,6 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  Int64: any;
   Time: any;
 };
 
@@ -70,6 +69,7 @@ export type Company = {
   billingAddress: Address;
   shippingAddress: Address;
   createdAt: Scalars['Time'];
+  invoiceTaxInclusive: Scalars['Boolean'];
 };
 
 export type Contact = {
@@ -113,11 +113,10 @@ export type CreateCompanyInput = {
   shippingAddress: CreateAddressInput;
 };
 
-
 export type Invoice = {
   __typename?: 'Invoice';
   id: Scalars['ID'];
-  number: Scalars['Int64'];
+  number: Scalars['String'];
   createdBy: User;
   client: Client;
   items: Array<LineItem>;
@@ -135,6 +134,7 @@ export type LineItem = {
   unitCost: Scalars['Float'];
   taxRate?: Maybe<Scalars['Float']>;
   quantity: Scalars['Float'];
+  taxInclusive: Scalars['Boolean'];
 };
 
 export type LineItemInput = {
@@ -143,6 +143,7 @@ export type LineItemInput = {
   unitCost: Scalars['Float'];
   taxRate?: Maybe<Scalars['Float']>;
   quantity: Scalars['Float'];
+  taxInclusive?: Maybe<Scalars['Boolean']>;
 };
 
 export type Mutation = {
@@ -150,6 +151,7 @@ export type Mutation = {
   createInvoice: Invoice;
   updateInvoice: Invoice;
   createInvoicePdf: Scalars['String'];
+  updateCompanyTaxInclusive: Company;
   login: AuthData;
   loginSecure: Scalars['String'];
   refreshToken: Scalars['String'];
@@ -183,6 +185,11 @@ export type MutationUpdateInvoiceArgs = {
 
 export type MutationCreateInvoicePdfArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationUpdateCompanyTaxInclusiveArgs = {
+  invoiceTaxInclusive: Scalars['Boolean'];
 };
 
 
@@ -287,12 +294,6 @@ export enum PreferredContact {
   Email = 'EMAIL'
 }
 
-export type PreviewInvoiceInput = {
-  number: Scalars['Int64'];
-  clientID: Scalars['ID'];
-  items: Array<LineItemInput>;
-};
-
 export type Query = {
   __typename?: 'Query';
   client?: Maybe<Client>;
@@ -356,7 +357,7 @@ export type QueryOtherCompanyArgs = {
 
 
 export type QueryPreviewInvoiceArgs = {
-  invoice: PreviewInvoiceInput;
+  invoice: InvoiceInput;
 };
 
 
@@ -441,6 +442,29 @@ export type CreateClientMutation = (
   )> }
 );
 
+export type CreateInvoiceMutationVariables = Exact<{
+  createInvoice: InvoiceInput;
+}>;
+
+
+export type CreateInvoiceMutation = (
+  { __typename?: 'Mutation' }
+  & { createInvoice: (
+    { __typename?: 'Invoice' }
+    & Pick<Invoice, 'id' | 'number'>
+    & { createdBy: (
+      { __typename?: 'User' }
+      & Pick<User, 'id'>
+    ), items: Array<(
+      { __typename?: 'LineItem' }
+      & Pick<LineItem, 'name' | 'description' | 'unitCost' | 'taxRate' | 'quantity'>
+    )>, client: (
+      { __typename?: 'Client' }
+      & Pick<Client, 'id'>
+    ) }
+  ) }
+);
+
 export type UpdateClientMutationVariables = Exact<{
   id: Scalars['ID'];
   client: UpdateClientInput;
@@ -523,7 +547,7 @@ export type MeQuery = (
 );
 
 export type PreviewInvoiceQueryVariables = Exact<{
-  previewInvoiceInvoice: PreviewInvoiceInput;
+  previewInvoiceInvoice: InvoiceInput;
 }>;
 
 
@@ -565,6 +589,52 @@ export function useCreateClientMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateClientMutationHookResult = ReturnType<typeof useCreateClientMutation>;
 export type CreateClientMutationResult = Apollo.MutationResult<CreateClientMutation>;
 export type CreateClientMutationOptions = Apollo.BaseMutationOptions<CreateClientMutation, CreateClientMutationVariables>;
+export const CreateInvoiceDocument = gql`
+    mutation CreateInvoice($createInvoice: InvoiceInput!) {
+  createInvoice(invoice: $createInvoice) {
+    id
+    number
+    createdBy {
+      id
+    }
+    items {
+      name
+      description
+      unitCost
+      taxRate
+      quantity
+    }
+    client {
+      id
+    }
+  }
+}
+    `;
+export type CreateInvoiceMutationFn = Apollo.MutationFunction<CreateInvoiceMutation, CreateInvoiceMutationVariables>;
+
+/**
+ * __useCreateInvoiceMutation__
+ *
+ * To run a mutation, you first call `useCreateInvoiceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateInvoiceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createInvoiceMutation, { data, loading, error }] = useCreateInvoiceMutation({
+ *   variables: {
+ *      createInvoice: // value for 'createInvoice'
+ *   },
+ * });
+ */
+export function useCreateInvoiceMutation(baseOptions?: Apollo.MutationHookOptions<CreateInvoiceMutation, CreateInvoiceMutationVariables>) {
+        return Apollo.useMutation<CreateInvoiceMutation, CreateInvoiceMutationVariables>(CreateInvoiceDocument, baseOptions);
+      }
+export type CreateInvoiceMutationHookResult = ReturnType<typeof useCreateInvoiceMutation>;
+export type CreateInvoiceMutationResult = Apollo.MutationResult<CreateInvoiceMutation>;
+export type CreateInvoiceMutationOptions = Apollo.BaseMutationOptions<CreateInvoiceMutation, CreateInvoiceMutationVariables>;
 export const UpdateClientDocument = gql`
     mutation UpdateClient($id: ID!, $client: UpdateClientInput!) {
   updateClient(id: $id, client: $client) {
@@ -798,7 +868,7 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PreviewInvoiceDocument = gql`
-    query PreviewInvoice($previewInvoiceInvoice: PreviewInvoiceInput!) {
+    query PreviewInvoice($previewInvoiceInvoice: InvoiceInput!) {
   previewInvoice(invoice: $previewInvoiceInvoice)
 }
     `;
