@@ -9,6 +9,10 @@ export default function Client() {
 
   const { id } = router.query;
 
+  if (id == null) {
+    return null;
+  }
+
   return (
     <Fade in>
       <ClientComponent edit id={id} />
