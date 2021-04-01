@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Formik, FormikHelpers, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as Yup from 'yup';
@@ -24,7 +24,7 @@ const InvoiceSchema: Yup.SchemaOf<PreviewInvoiceInput> = Yup.object({
   items: Yup.array().of(InvoiceItemSchema).defined(),
 });
 
-const InvoicePreview: React.FC = () => {
+const InvoicePreview = () => {
   const {
     values,
     isValid,
@@ -77,7 +77,7 @@ const InvoicePreview: React.FC = () => {
   );
 };
 
-const CreateInvoice: React.FC = () => (
+const CreateInvoice = () => (
   <Formik
     initialValues={{
       number: 1,
