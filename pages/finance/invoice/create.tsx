@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 
 import {
+  InvoiceInput,
   LineItemInput,
-  PreviewInvoiceInput,
   usePreviewInvoiceQuery,
 } from '@/lib/graphql';
 
@@ -15,10 +15,8 @@ const CreateInvoice: React.FC = () => {
     trigger,
     formState,
     getValues,
-  } = useForm<PreviewInvoiceInput>({
-    defaultValues: {
-      number: 1,
-    },
+  } = useForm<InvoiceInput>({
+    defaultValues: {},
     mode: 'onBlur',
     resolver: null, // TODO: Use yup for validation
   });
@@ -48,7 +46,7 @@ const CreateInvoice: React.FC = () => {
     skip: !formState.isValid,
   });
 
-  const onSubmit = (submitData: PreviewInvoiceInput) => {
+  const onSubmit = (submitData: InvoiceInput) => {
     console.log('submit: ', submitData);
     // previewInvoice({
     //   variables: {
