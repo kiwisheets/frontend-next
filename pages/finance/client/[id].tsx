@@ -2,16 +2,12 @@ import React from 'react';
 import { Fade } from '@material-ui/core';
 
 import ClientComponent from '@/components/Client';
-import { GetStaticProps } from 'next';
+import router from 'next/router';
 
-type ClientProps = {
-  id: string;
-};
+const Client = () => {
+  const { id } = router.query;
 
-const Client = (props: ClientProps) => {
-  const { id } = props;
-
-  if (id == null) {
+  if (id == null || typeof id !== 'string') {
     return null;
   }
 
@@ -21,11 +17,5 @@ const Client = (props: ClientProps) => {
     </Fade>
   );
 };
-
-export const getStaticProps: GetStaticProps = async (context) => ({
-  props: {
-    id: context.params.id,
-  },
-});
 
 export default Client;
