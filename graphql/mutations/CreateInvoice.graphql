@@ -1,0 +1,19 @@
+mutation CreateInvoice($createInvoice: InvoiceInput!) {
+  createInvoice(invoice: $createInvoice) {
+    id
+    number
+    createdBy {
+      id
+    }
+    items {
+      name
+      description
+      unitCost
+      taxRate
+      quantity
+    }
+    client {
+      id
+    }
+  }
+}
