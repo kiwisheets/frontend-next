@@ -194,7 +194,10 @@ export default function ClientsDashboard() {
                         />
                       </TableCell>
                       <TableCell id={labelId} scope="row">
-                        <Link component={NextLink} href={`client/${row.id}`}>
+                        <Link
+                          component={NextLink}
+                          href={`client/view?id=${row.id}`}
+                        >
                           <Tooltip title="Test">
                             <>{row.name}</>
                           </Tooltip>
