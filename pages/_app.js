@@ -13,6 +13,7 @@ import theme from '@/lib/theme';
 
 export default function MyApp({ Component, pageProps }) {
   const apolloClient = useApollo(pageProps.initialApolloState);
+
   return (
     <ApolloProvider client={apolloClient}>
       <ThemeProvider theme={theme}>

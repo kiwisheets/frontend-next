@@ -8,6 +8,19 @@ import { usePreviewInvoiceQuery } from '@/lib/graphql';
 const Invoices = () => {
   const { data, loading, error } = usePreviewInvoiceQuery({
     fetchPolicy: 'no-cache',
+    variables: {
+      previewInvoiceInvoice: {
+        clientID: '5xvqrzqOJ6',
+        items: [
+          {
+            description: 'Test',
+            name: 'Test item',
+            quantity: 1,
+            unitCost: 5.0,
+          },
+        ],
+      },
+    },
   });
 
   return (

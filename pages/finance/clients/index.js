@@ -87,9 +87,10 @@ export default function ClientsDashboard() {
     fetchPolicy: 'cache-and-network',
   });
 
+  const rowCount = countLoading || !count ? 0 : count.clientCount;
   const rows = data ? data.clients : [];
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
@@ -104,7 +105,7 @@ export default function ClientsDashboard() {
     setSelected([]);
   };
 
-  const handleSelect = (event, name) => {
+  const handleSelect = (_event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -129,7 +130,7 @@ export default function ClientsDashboard() {
     setPage(0);
   };
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_, newPage) => {
     setPage(newPage);
   };
 
@@ -153,8 +154,8 @@ export default function ClientsDashboard() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <Fade in>
@@ -184,7 +185,7 @@ export default function ClientsDashboard() {
                       selected={isItemSelected}
                       tabIndex={-1}
                       hover
-                      // onClick={() => history.push(`client/${row.id}`)}
+                      // onClick={() => history.push(`client?id=${row.id}`)}
                       // style={{ cursor: 'pointer' }}
                     >
                       <TableCell padding="checkbox">
@@ -194,10 +195,7 @@ export default function ClientsDashboard() {
                         />
                       </TableCell>
                       <TableCell id={labelId} scope="row">
-                        <Link
-                          component={NextLink}
-                          href={`client/view?id=${row.id}`}
-                        >
+                        <Link component={NextLink} href={`client?id=${row.id}`}>
                           <Tooltip title="Test">
                             <>{row.name}</>
                           </Tooltip>
@@ -228,12 +226,7 @@ export default function ClientsDashboard() {
         <TablePagination
           rowsPerPageOptions={[20]}
           component="div"
-          count={(() => {
-            if (count) {
-              return count.clientCount;
-            }
-            return 0;
-          })()}
+          count={rowCount}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}

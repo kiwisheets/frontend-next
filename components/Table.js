@@ -82,7 +82,7 @@ const TableToolbar = (props) => {
             </IconButton>
           </Tooltip> */}
 
-          <Link component={RouterLink} href="client/create">
+          <Link component={RouterLink} href="clients/create">
             <Tooltip title="Create new">
               <IconButton aria-label="create new">
                 <AddIcon />
