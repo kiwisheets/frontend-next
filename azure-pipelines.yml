@@ -40,6 +40,13 @@ steps:
           -t $(repository):latest \
           .
 
+  - task: Docker@2
+    displayName: Docker Login
+    condition: and(succeeded(), eq(variables.isMain, true))
+    inputs:
+      containerRegistry: 'Docker'
+      command: 'login'
+
   - task: CmdLine@2
     displayName: Build and Push
     condition: and(succeeded(), eq(variables.isMain, true))
