@@ -22,6 +22,8 @@ jobs:
 
   docker-build:
     runs-on: ubuntu-latest
+    needs:
+      - test
     permissions:
       contents: read
       packages: write
@@ -55,7 +57,7 @@ jobs:
         with:
           context: .
           platforms: linux/amd64,linux/arm64
-          push: github.ref == 'refs/heads/main'
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.date.outputs.date }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
