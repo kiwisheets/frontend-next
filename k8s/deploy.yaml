@@ -8,7 +8,7 @@ metadata:
     app: __app__
     environment: __env__
     namespace: __namespace__
-    project: __project_
+    project: __project__
     version: v1
 spec:
   progressDeadlineSeconds: 600
@@ -23,7 +23,7 @@ spec:
         app: __app__
         environment: __env__
         namespace: __namespace__
-        project: __project_
+        project: __project__
         version: v1
         workload.user.cattle.io/workloadselector: apps.deployment-__namespace__-__app__
     spec:
