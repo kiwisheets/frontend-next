@@ -1,8 +1,8 @@
 import React from 'react';
 import { Fade } from '@material-ui/core';
+import { useRouter } from 'next/router';
 
 import ClientComponent from '@/components/Client';
-import { useRouter } from 'next/router';
 
 const Client = () => {
   const router = useRouter();

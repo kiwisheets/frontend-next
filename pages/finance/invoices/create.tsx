@@ -8,18 +8,11 @@ import {
 } from '@/lib/graphql';
 
 const CreateInvoice: React.FC = () => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    trigger,
-    formState,
-    getValues,
-  } = useForm<InvoiceInput>({
-    defaultValues: {},
-    mode: 'onBlur',
-    resolver: null, // TODO: Use yup for validation
-  });
+  const { control, register, handleSubmit, trigger, formState, getValues } =
+    useForm<InvoiceInput>({
+      defaultValues: {},
+      mode: 'onBlur',
+    });
 
   const { fields, append, remove } = useFieldArray<LineItemInput>({
     control,

@@ -16,12 +16,36 @@ pool:
 
 variables:
   tag: '$(Build.BuildNumber)'
-  repository: 'kiwisheets/frontend'
-  isMain: $[in(variables['Build.SourceBranch'], 'refs/heads/master')]
+  repository: 'kiwisheets/frontend-next'
+  isMain: $[in(variables['Build.SourceBranch'], 'refs/heads/main')]
 
 steps:
   - task: Npm@1
     inputs:
       command: 'ci'
+
   - bash: CI=true npm test
     displayName: Jest Test
+
+  - task: CmdLine@2
+    displayName: Build
+    inputs:
+      script: |
+        docker run --privileged --rm tonistiigi/binfmt --install arm64
+        docker run --privileged --rm tonistiigi/binfmt
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t $(repository):$(tag) \
+          -t $(repository):latest \
+          .
+
+  - task: Docker@2
+    displayName: Push image
+    condition: and(succeeded(), eq(variables.isMain, true))
+    inputs:
+      containerRegistry: 'Docker'
+      repository: '$(repository)'
+      command: 'push'
+      tags: |
+        '$(tag)'
+        latest

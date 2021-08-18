@@ -7,7 +7,5 @@ module.exports = withMDX({
   env: {
     GRAPHQL_URI: 'https://api-dev.kiwisheets.com/graphql',
   },
-  future: {
-    webpack5: true,
-  },
+  webpack5: true,
 });
