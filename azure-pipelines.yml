@@ -47,5 +47,5 @@ steps:
       repository: '$(repository)'
       command: 'push'
       tags: |
-        '$(tag)'
+        $(tag)
         latest
