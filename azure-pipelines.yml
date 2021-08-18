@@ -29,6 +29,7 @@ steps:
 
   - task: CmdLine@2
     displayName: Build
+    condition: and(succeeded(), eq(variables.isMain, false))
     inputs:
       script: |
         docker run --privileged --rm tonistiigi/binfmt --install arm64
@@ -39,13 +40,16 @@ steps:
           -t $(repository):latest \
           .
 
-  - task: Docker@2
-    displayName: Push image
+  - task: CmdLine@2
+    displayName: Build and Push
     condition: and(succeeded(), eq(variables.isMain, true))
     inputs:
-      containerRegistry: 'Docker'
-      repository: '$(repository)'
-      command: 'push'
-      tags: |
-        $(tag)
-        latest
+      script: |
+        docker run --privileged --rm tonistiigi/binfmt --install arm64
+        docker run --privileged --rm tonistiigi/binfmt
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t $(repository):$(tag) \
+          -t $(repository):latest \
+          --push \
+          .
