@@ -15,48 +15,84 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  tag: '$(Build.BuildNumber)'
-  repository: 'kiwisheets/frontend-next'
+  app: frontend-next
+  project: kiwisheets
+
+  namespace: $(project)-$(env)
+  tag: $(Build.BuildNumber)
+  imagePullSecret: ghcr-pull-secret
+  imageRepository: $(project)/$(app)
+  containerRegistry: ghcr.io
+  image: $(containerRegistry)/$(imageRepository):$(tag)
+  dockerRegistryServiceConnection: GitHub CR
   isMain: $[in(variables['Build.SourceBranch'], 'refs/heads/main')]
+  isDev: $[in(variables['Build.SourceBranch'], 'refs/heads/dev')]
 
-steps:
-  - task: Npm@1
-    inputs:
-      command: 'ci'
+stages:
+  - stage: CI
+    jobs:
+      - job: Test
+        steps:
+          - task: Npm@1
+            inputs:
+              command: ci
 
-  - bash: CI=true npm test
-    displayName: Jest Test
+          - bash: CI=true npm test
+            displayName: Jest Test
 
-  - task: CmdLine@2
-    displayName: Build
-    condition: and(succeeded(), eq(variables.isMain, false))
-    inputs:
-      script: |
-        docker run --privileged --rm tonistiigi/binfmt --install arm64
-        docker run --privileged --rm tonistiigi/binfmt
-        docker buildx create --use
-        docker buildx build --platform linux/amd64,linux/arm64 \
-          -t $(repository):$(tag) \
-          -t $(repository):latest \
-          .
+      - job: Build
+        steps:
+          - task: Docker@2
+            displayName: Docker Login
+            inputs:
+              containerRegistry: $(dockerRegistryServiceConnection)
+              command: login
 
-  - task: Docker@2
-    displayName: Docker Login
-    condition: and(succeeded(), eq(variables.isMain, true))
-    inputs:
-      containerRegistry: 'Docker'
-      command: 'login'
+          - bash: |
+              docker run --privileged --rm tonistiigi/binfmt --install arm64
+              docker run --privileged --rm tonistiigi/binfmt
+              docker buildx create --use
+              docker buildx build --platform linux/amd64,linux/arm64 \
+                -t $(containerRegistry)/$(imageRepository):$(tag) \
+                -t $(containerRegistry)/$(imageRepository):latest \
+                --push \
+                .
 
-  - task: CmdLine@2
-    displayName: Build and Push
-    condition: and(succeeded(), eq(variables.isMain, true))
-    inputs:
-      script: |
-        docker run --privileged --rm tonistiigi/binfmt --install arm64
-        docker run --privileged --rm tonistiigi/binfmt
-        docker buildx create --use
-        docker buildx build --platform linux/amd64,linux/arm64 \
-          -t $(repository):$(tag) \
-          -t $(repository):latest \
-          --push \
-          .
+          - publish: $(Build.SourcesDirectory)/k8s
+            artifact: k8s
+
+  - stage: DeployDev
+    condition: and(succeeded(), variables.isDev)
+    jobs:
+      - deployment: DeployDev
+        environment: Dev
+        variables:
+          env: dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+                  displayName: Replace tokens in k8s/*.yaml
+                  inputs:
+                    rootDirectory: $(Pipeline.Workspace)/k8s
+                    targetFiles: '**/*.yaml'
+                    tokenPrefix: __
+                    tokenSuffix: __
+
+                - bash: cat $(Pipeline.Workspace)/k8s/deploy.yaml
+
+                - task: KubernetesManifest@0
+                  displayName: Create imagePullSecret
+                  inputs:
+                    action: createSecret
+                    namespace: $(namespace)
+                    secretName: $(imagePullSecret)
+                    dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+
+                # - task: KubernetesManifest@0
+                #   displayName: deploy
+                #   inputs:
+                #     namespace: $(namespace)
+                #     manifests: $(Pipeline.Workspace)/k8s/deploy.yaml
+                #     imagePullSecrets: $(imagePullSecret)
