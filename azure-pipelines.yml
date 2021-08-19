@@ -65,9 +65,11 @@ stages:
     condition: and(succeeded(), variables.isDev)
     jobs:
       - deployment: DeployDev
-        environment: Dev
+        environment: Dev.kiwisheets-dev
         variables:
           env: dev
+          NEXT_PUBLIC_BASE_DOMAIN: https://dev.kiwisheets.com
+          NEXT_PUBLIC_API_URI: /graphql
         strategy:
           runOnce:
             deploy:
@@ -79,6 +81,7 @@ stages:
                     targetFiles: '**/*.yaml'
                     tokenPrefix: __
                     tokenSuffix: __
+                    actionOnMissing: fail
 
                 - bash: cat $(Pipeline.Workspace)/k8s/deploy.yaml
 
