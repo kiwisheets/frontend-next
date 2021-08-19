@@ -15,6 +15,6 @@ jobs:
       - name: echo event
         run: echo ${{ github.event }}
       - name: echo sha
-        run: echo ${{ env.GIT_SHA }}
+        run: echo ${{ env.GITHUB_SHA }}
       - name: echo ref
         run: echo ${{ env.GITHUB_REF }}
