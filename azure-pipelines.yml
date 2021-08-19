@@ -60,7 +60,7 @@ stages:
   - stage: DeployDev
     displayName: Deploy to Dev
     jobs:
-      - deployment: DeployDev
+      - deployment: Dev
         environment: dev.kiwisheets-dev
         variables:
           env: dev
@@ -97,7 +97,7 @@ stages:
   - stage: DeployProd
     displayName: Deploy to Prod
     jobs:
-      - deployment: DeployDev
+      - deployment: Prod
         environment: prod.kiwisheets-prod
         variables:
           env: prod
