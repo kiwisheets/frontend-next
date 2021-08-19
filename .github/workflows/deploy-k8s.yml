@@ -12,5 +12,9 @@ jobs:
       url: http://dev.kiwisheets.com
     runs-on: ubuntu-latest
     steps:
-      - name: echo
+      - name: echo event
         run: echo ${{ github.event }}
+      - name: echo sha
+        run: echo ${{ env.GIT_SHA }}
+      - name: echo ref
+        run: echo ${{ env.GITHUB_REF }}
