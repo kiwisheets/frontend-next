@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - '*'
+
+pr:
+  branches:
+    include:
+      - '*'
+
+resources:
+  - repo: self
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  tag: '$(Build.BuildNumber)'
+  repository: 'kiwisheets/frontend-next'
+  isMain: $[in(variables['Build.SourceBranch'], 'refs/heads/main')]
+
+steps:
+  - task: Npm@1
+    inputs:
+      command: 'ci'
+
+  - bash: CI=true npm test
+    displayName: Jest Test
+
+  - task: CmdLine@2
+    displayName: Build
+    condition: and(succeeded(), eq(variables.isMain, false))
+    inputs:
+      script: |
+        docker run --privileged --rm tonistiigi/binfmt --install arm64
+        docker run --privileged --rm tonistiigi/binfmt
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t $(repository):$(tag) \
+          -t $(repository):latest \
+          .
+
+  - task: Docker@2
+    displayName: Docker Login
+    condition: and(succeeded(), eq(variables.isMain, true))
+    inputs:
+      containerRegistry: 'Docker'
+      command: 'login'
+
+  - task: CmdLine@2
+    displayName: Build and Push
+    condition: and(succeeded(), eq(variables.isMain, true))
+    inputs:
+      script: |
+        docker run --privileged --rm tonistiigi/binfmt --install arm64
+        docker run --privileged --rm tonistiigi/binfmt
+        docker buildx create --use
+        docker buildx build --platform linux/amd64,linux/arm64 \
+          -t $(repository):$(tag) \
+          -t $(repository):latest \
+          --push \
+          .
