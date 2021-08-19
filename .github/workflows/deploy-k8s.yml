@@ -2,8 +2,6 @@ name: deploy
 
 on:
   registry_package:
-    types:
-      - published
 
 jobs:
   deploy-dev:
