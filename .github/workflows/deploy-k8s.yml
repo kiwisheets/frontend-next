@@ -1,0 +1,16 @@
+name: deploy
+
+on:
+  registry_package:
+    types:
+      - published
+
+jobs:
+  deploy-dev:
+    environment:
+      name: dev
+      url: http://dev.kiwisheets.com
+    runs-on: ubuntu-latest
+    steps:
+      - name: echo
+        run: echo ${{ github.event }}
