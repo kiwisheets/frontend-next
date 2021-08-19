@@ -1,12 +1,8 @@
 trigger:
   branches:
     include:
-      - '*'
-
-pr:
-  branches:
-    include:
-      - '*'
+      - main
+      - dev
 
 resources:
   - repo: self
@@ -62,10 +58,10 @@ stages:
             artifact: k8s
 
   - stage: DeployDev
-    condition: and(succeeded(), variables.isDev)
+    displayName: Deploy to Dev
     jobs:
       - deployment: DeployDev
-        environment: Dev.kiwisheets-dev
+        environment: dev.kiwisheets-dev
         variables:
           env: dev
           NEXT_PUBLIC_BASE_DOMAIN: https://dev.kiwisheets.com
@@ -83,7 +79,42 @@ stages:
                     tokenSuffix: __
                     actionOnMissing: fail
 
-                - bash: cat $(Pipeline.Workspace)/k8s/deploy.yaml
+                - task: KubernetesManifest@0
+                  displayName: Create imagePullSecret
+                  inputs:
+                    action: createSecret
+                    namespace: $(namespace)
+                    secretName: $(imagePullSecret)
+                    dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
+
+                - task: KubernetesManifest@0
+                  displayName: deploy
+                  inputs:
+                    namespace: $(namespace)
+                    manifests: $(Pipeline.Workspace)/k8s/deploy.yaml
+                    imagePullSecrets: $(imagePullSecret)
+
+  - stage: DeployProd
+    displayName: Deploy to Prod
+    jobs:
+      - deployment: DeployDev
+        environment: prod.kiwisheets-prod
+        variables:
+          env: prod
+          NEXT_PUBLIC_BASE_DOMAIN: https://app.kiwisheets.com
+          NEXT_PUBLIC_API_URI: /graphql
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: qetza.replacetokens.replacetokens-task.replacetokens@3
+                  displayName: Replace tokens in k8s/*.yaml
+                  inputs:
+                    rootDirectory: $(Pipeline.Workspace)/k8s
+                    targetFiles: '**/*.yaml'
+                    tokenPrefix: __
+                    tokenSuffix: __
+                    actionOnMissing: fail
 
                 - task: KubernetesManifest@0
                   displayName: Create imagePullSecret
@@ -93,9 +124,9 @@ stages:
                     secretName: $(imagePullSecret)
                     dockerRegistryEndpoint: $(dockerRegistryServiceConnection)
 
-                # - task: KubernetesManifest@0
-                #   displayName: deploy
-                #   inputs:
-                #     namespace: $(namespace)
-                #     manifests: $(Pipeline.Workspace)/k8s/deploy.yaml
-                #     imagePullSecrets: $(imagePullSecret)
+                - task: KubernetesManifest@0
+                  displayName: deploy
+                  inputs:
+                    namespace: $(namespace)
+                    manifests: $(Pipeline.Workspace)/k8s/deploy.yaml
+                    imagePullSecrets: $(imagePullSecret)
